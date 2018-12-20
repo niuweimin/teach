@@ -7,7 +7,7 @@ package com.tt.teach.pojo;
 import java.util.Date;
 
 public class Student {
-    private Integer studentNo;
+    private Integer studentNo;//学号
     private String loginPwd;
     private String studentName;
     private String sex;
@@ -17,6 +17,15 @@ public class Student {
     private Date bornDate;
     private String email;
     private String identityCard;
+    private String gradeName;
+
+    public String getGradeName() {
+        return gradeName;
+    }
+
+    public void setGradeName(String gradeName) {
+        this.gradeName = gradeName;
+    }
 
     public Integer getStudentNo() {
         return studentNo;
