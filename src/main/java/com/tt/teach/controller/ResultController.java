@@ -1,5 +1,6 @@
 package com.tt.teach.controller;
 
+import com.tt.teach.pojo.Result;
 import com.tt.teach.pojo.Student;
 import com.tt.teach.service.ResultService;
 import org.springframework.stereotype.Controller;
@@ -24,7 +25,7 @@ public class ResultController {
     @RequestMapping(value = "/getResultList",method = RequestMethod.GET)
     @ResponseBody
     public Object getStudentList() {
-        List<Student> list=resultService.getResultList();
+        List<Result> list=resultService.getResultList();
         return list;
     }
 }

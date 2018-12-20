@@ -32,6 +32,7 @@
 
 </head>
 <body>
+<!--1.工具类-->
 <div class="placeholder hd">
         <span class="setIcon pull-right">
                     <button class=" btn btn-primary " data-toggle='modal' data-target='#myModal' type="button" id="add"><span class="fa fa-add"></span>&nbsp;成绩录入</button>
@@ -41,10 +42,12 @@
                     <button class=" btn btn-primary " type="button" id="del"><span class="fa fa-remove"></span>&nbsp;删除</button>
         </span>
 </div>
+<!--2.空的table-->
     <table id="table_result" data-height="360" data-toggle="table">
 
 
     </table>
+<!--3.隐藏的弹出框-->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -104,7 +107,57 @@
 <script th:src="@{/static/js/lib/ie10-viewport-bug-workaround.js}"></script>
 <!--1.使用bootstrapTable将json数据渲染到页面-->
 <script>
+    function findResFn() {
+        $("#table_result").bootstrapTable({
+            url:"/res/getResultList",
+            type:"GET",
+            dataType:"json",
+            pagination:true,
+            search:true,
+            showRefresh:true,
+            pageSize:5,
+            pageList:[1,2,3,4,5],
+            columns:[
+                {
+                    field: "resultNo",
+                    title: "成绩编号",
+                    align: "center",
+                    valign: "middle",
+                    searchable: true
+                },
+                {
+                    field: "subjectName",
+                    title: "科目",
+                    align: "center",
+                    valign: "middle",
+                    searchable: true
+                }, {
+                    field: "studentResult",
+                    title: "成绩",
+                    align: "center",
+                    valign: "middle",
+                    searchable: true
+                },
+                {
+                    field: "studentName",
+                    title: "学生名称",
+                    align: "center",
+                    valign: "middle",
+                    searchable: true
+                },
+                {
+                    field: "examDate",
+                    title: "成绩时间",
+                    align: "center",
+                    valign: "middle",
+                    searchable: true
+                }
 
+            ]
+        })
+    }
+
+    findResFn();
 
 </script>
 <!--2.关于表格点击每一行tr背景颜色的变化。添加了一个class——》tr_new，后面的操作全是通过这个class取获取主键进行操作的-->
