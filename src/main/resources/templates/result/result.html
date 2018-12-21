@@ -160,14 +160,55 @@
     findResFn();
 
 </script>
-<!--2.关于表格点击每一行tr背景颜色的变化。添加了一个class——》tr_new，后面的操作全是通过这个class取获取主键进行操作的-->
+<!--2.关于表格点击每一行tr背景颜色的变化。添加了一个class——》tr_new，后面的操作全是通过这个class去获取主键进行操作的-->
 <script>
-   
+    $(function () {
+        $("#table_result tbody").on("click","tr",function () {
+            //添加样式前，先将上一次的样式移除掉
+            $("#table_result tbody tr").removeClass("tr_new");
+            //为当前选中的行，添加类样式
+            $(this).addClass("tr_new");
+        })
+    })
 </script>
 
-<!--3.对添加，保存，编辑，取消编辑，删除，全部删除进行对应的操作-->
+<!--3.对添加，保存，编辑，取消编辑，删除进行对应的操作-->
 <script>
-   
+    $(function () {
+        //1.删除
+        $("#del").on("click",function () {
+            var trFather=$(".tr_new");
+            if(trFather.length!=1){
+                alert("请选择一行要删除的数据！");
+            }else{
+                var isOk=confirm("您确定要删除吗");
+                if(isOk){
+                    //通过trFather获取值
+                    var resultNo=trFather.children()[0].innerText;
+                    $.ajax({
+                        url:"/res/deleteResult/"+resultNo,
+                        type:"DELETE",
+                        success:function (data) {
+                            //1.将后台的json数据显示弹出，进行温馨提示
+                            alert(data.msg);
+                            //2.提示完，重新渲染一下页面
+                            window.location.reload();
+                        }
+                    })
+                }
+            }
+        })
+        //2.编辑
+        $("#edit").on("click",function () {
+            var trFather=$(".tr_new");
+            if (trFather.length!=1){
+                alert('请选择一行要编辑的数据！');
+            }else {
+                var child=trFather.children();
+                console.log(child);
+            }
+        })
+    })
 </script>
 <script>
 

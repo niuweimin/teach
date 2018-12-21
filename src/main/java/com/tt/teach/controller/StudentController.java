@@ -69,7 +69,7 @@ public class StudentController extends BaseController{
         List<Student> list=studentService.getStudentList();
         return list;
     }
-    //删除
+    //删除,使用delete提交
     @RequestMapping(value = "/deleteStudent/{stuNo}",method = RequestMethod.DELETE)
     @ResponseBody
     public Object deleteStudent(@PathVariable Integer stuNo) {
