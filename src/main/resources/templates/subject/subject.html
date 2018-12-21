@@ -60,6 +60,7 @@
                         <input type="hidden" value="" id="bhId">
                         <div class="form-group">
                             <label for="subName">课程名称</label>
+                            <span id="subject"></span>
                             <input type="text" class="form-control" id="subName" placeholder="名称" required>
                         </div>
                         <div class="form-group">
@@ -68,7 +69,10 @@
                         </div>
                         <div class="form-group">
                             <label for="gradeID">年级ID</label>
-                            <input type="text" class="form-control" id="gradeID" placeholder="年级ID" required>
+                            <select id="gradeID" name="gradeID" class="form-control">
+                                <option  th:each="grade:${gradeList}" th:text="${grade.gradeName}" th:value="${grade.gradeID}"></option>
+                            </select>
+                            <!--<input type="text" class="form-control" id="gradeID" placeholder="年级ID" required>-->
                         </div>
                         <button type="button" class="btn btn-primary" id="addSubject">添加</button>
                     </form>
@@ -98,16 +102,178 @@
 <script th:src="@{/static/js/lib/ie10-viewport-bug-workaround.js}"></script>
 <!--1.使用bootstrapTable将json数据渲染到页面-->
 <script>
-   
+    function findSubfn() {
+      $("#table_subject").bootstrapTable({
+          url:"/sub/getSubjectList",
+          type:"GET",
+          dataType:"json",
+          pagination:true,
+          search:true,
+          showRefresh:true,
+          pageSize:5,
+          pageList:[1,2,3,4,5],
+          columns:[
+              {
+                  field: "subjectNo",
+                  title: "课程编号",
+                  align: "center",
+                  valign: "middle",
+                  searchable: true
+              },{
+                  field: "subjectName",
+                  title: "课程名称",
+                  align: "center",
+                  valign: "middle",
+                  searchable: true
+              },{
+                  field: "classHour",
+                  title: "学时",
+                  align: "center",
+                  valign: "middle",
+                  searchable: true
+              },{
+                  field: "gradeName",
+                  title: "年级名称",
+                  align: "center",
+                  valign: "middle",
+                  searchable: true
+              }
+          ]
+      })
+    }
+
+    findSubfn();
 </script>
 <!--2.关于表格点击每一行tr背景颜色的变化。添加了一个class——》tr_new，后面的操作全是通过这个class取获取主键进行操作的-->
 <script>
-  
+    $("#table_subject tbody").on("click","tr",function () {
+        $("#table_subject tbody tr").removeClass("tr_new");
+        $(this).addClass("tr_new");
+
+    })
 </script>
 
 <!--3.对添加，保存，编辑，取消编辑，删除，全部删除进行对应的操作-->
 <script>
-   
-</script>
+   $(function () {
+       //1.删除
+       $("#del").on("click",function () {
+           var taFather=$(".tr_new");
+           if(taFather.length!=1){
+               alert("请选择一行要删除的数据！");
+           }else {
+               var isOK=confirm("您确定要删除吗？");
+               if(isOK){
+                   var subjectNo=taFather.children()[0].innerText;
+                   $.ajax({
+                       url:"/sub/deleteSubject/"+subjectNo,
+                       type:"DELETE",
+                       success:function (data) {
+                           alert(data.msg);
+                           window.location.reload();
+                       }
+                   })
+               }
+           }
+       })
+       //删除全部
+       $("#delAll").on("click",function () {
+           alert("玩呢？？")
+       })
+       //2.编辑
+       $("#edit").on("click",function () {
+           var trFather=$(".tr_new");
+           if(trFather.length!=1){
+               alert("请选择一行数据进行编辑")
+           }else{
+               var child=trFather.children();
+               child[1].innerHTML='<input type="text" class="subjectName" value="'+child[1].innerText+'"/>';
+               child[2].innerHTML='<input type="text" class="classHour" value="'+child[2].innerText+'"/>';
 
+           }
+           $(this).unbind("click");
+       })
+       //3.取消编辑
+       $("#cancel").on("click",function () {
+           window.location.reload();
+       })
+       //4.保存
+       $("#save").on("click",function () {
+           var trFather=$(".tr_new");
+           if(trFather.length!=1){
+               alert("请选择一行数据进行编辑在保存")
+           }else{
+               var subjectNo=trFather.children()[0].innerText;
+               var subjectName=$(".subjectName").val();
+               var classHour=$(".classHour").val();
+               $.ajax({
+                   url:"/sub/updateSub",
+                   type:"PUT",
+                   data:{
+                       subjectNo:subjectNo,
+                       subjectName:subjectName,
+                       classHour:classHour,
+                   },
+                   success:function (data) {
+                       alert(data.msg);
+                       window.location.reload();
+                   }
+               })
+           }
+       })
+       //5.添加
+       $("#addSubject").on("click",function () {
+
+           var subjectName=$("#subName").val();
+           var classHour=$("#hours").val();
+           var gradeID=$("#gradeID").val()
+           $.ajax({
+               url:"/sub/addSubject",
+               type:"PUT",
+               data: {
+                   gradeID: gradeID,
+                   subjectName: subjectName,
+                   classHour: classHour,
+               },
+               success:function (data) {
+                   alert(data.msg);
+                   window.location.reload();
+               }
+           })
+       })
+       //6.对课程进行异步查询getSubByNo
+       $("#subName").on("blur",function () {
+           var subjectName=$("#subName").val();
+           $("#subject").removeClass();
+           if (subjectName!=""&subjectName!=null){
+               $.ajax({
+                   url:"/sub/getSubByName/"+subjectName,
+                   type:"GET",
+                  success:function (data) {
+                      $("#subject").html("温馨提示:"+data.msg)
+                      $("#subject").addClass("blue")
+                  }
+               })
+           }else {
+               $("#subject").html("温馨提示:课程不能为空")
+               $("#subject").addClass("red")
+           }
+       })
+
+   })
+</script>
+<style type="text/css">
+    .red {
+        color: #ff4c33;
+        font-size: 9px;
+        font-weight: bolder;
+        margin-left: 380px;
+    }
+    .blue {
+        color:blue;
+        font-size: 9px;
+        font-weight: bolder;
+        margin-left: 390px;
+    }
+</style>
 </html>

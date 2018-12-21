@@ -55,7 +55,7 @@ public class ResultController {
         }
         return JsonResult.no("修改失败",result1);
     }
-
+    //添加
     @RequestMapping(value = "/addResult",method = RequestMethod.PUT)
     @ResponseBody
     public JsonResult addResult(@RequestParam Integer studentNo, @RequestParam Integer subjectNo, @RequestParam String examDate, @RequestParam Integer studentResult) throws ParseException {

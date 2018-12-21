@@ -9,6 +9,15 @@ public class Subject {
     private String subjectName;
     private Integer classHour;
     private Integer gradeID;
+    private String gradeName;
+
+    public String getGradeName() {
+        return gradeName;
+    }
+
+    public void setGradeName(String gradeName) {
+        this.gradeName = gradeName;
+    }
 
     public Integer getSubjectNo() {
         return subjectNo;
