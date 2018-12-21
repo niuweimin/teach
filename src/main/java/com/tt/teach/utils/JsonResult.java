@@ -3,9 +3,9 @@ package com.tt.teach.utils;
 public class JsonResult {
     //响应状态码
     private Integer status;
-    //响应消息
+    //响应的消息
     private String msg;
-    //响应数据
+    //响应的数据
     private Object myData;
 
     public JsonResult() {
@@ -18,7 +18,6 @@ public class JsonResult {
     }
 
     public Integer getStatus() {
-
         return status;
     }
 
@@ -41,13 +40,12 @@ public class JsonResult {
     public void setMyData(Object myData) {
         this.myData = myData;
     }
-    //成功
-    public static JsonResult ok(String msg,Object myData) {
-        return new JsonResult(200,msg,myData);
-    }
-    //失败
-    public static JsonResult no(String msg,Object myData) {
-        return new JsonResult(502,msg,myData);
+    //成功的时候调用
+    public static JsonResult ok(String msg, Object myData) {
+        return new JsonResult(200, msg, myData);
     }
 
+    public static JsonResult no(String msg, Object myData) {
+        return new JsonResult(502, msg, myData);
+    }
 }
